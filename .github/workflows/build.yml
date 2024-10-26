@@ -1,0 +1,38 @@
+name: Build odhcp6c for x86
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential
+
+    - name: Build odhcp6c
+      run: |
+        make clean
+        make
+        
+    - name: Upload binary
+      uses: actions/upload-artifact@v2
+      with:
+        name: odhcp6c-x86
+        path: ./odhcp6c
